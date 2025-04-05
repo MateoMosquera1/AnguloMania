@@ -5,7 +5,7 @@ let puntos = 0;
 let nivel = 1;
 let margenError = 10;
 let mensaje = "";
-let esperando = false;
+let mensajeTimer = 0;
 
 let nombreJugador = "";
 let juegoIniciado = false;
@@ -18,12 +18,16 @@ function setup() {
 }
 
 function draw() {
-  background(20);
-  
+  background(30);
+
   if (!juegoIniciado) {
     mostrarPantallaInicio();
   } else {
     mostrarJuego();
+  }
+
+  if (mensaje && frameCount > mensajeTimer + 90) {
+    mensaje = "";
   }
 }
 
@@ -33,6 +37,8 @@ function mostrarPantallaInicio() {
   text("Bienvenido a ÁnguloManía 🎯", width / 2, height / 3);
   textSize(20);
   text("Escribe tu nombre o apodo y presiona Enter para comenzar", width / 2, height / 2);
+  textSize(24);
+  text(nombreJugador + "|", width / 2, height / 2 + 40);
 
   textSize(18);
   text("By: Mateo Cuesta, Héctor Andrés", width / 2, height - 60);
@@ -50,9 +56,9 @@ function keyPressed() {
     }
   } else {
     if (keyCode === LEFT_ARROW) {
-      anguloUsuario = max(anguloUsuario - 2, 0);
+      anguloUsuario = max(0, anguloUsuario - 3); // velocidad aumentada
     } else if (keyCode === RIGHT_ARROW) {
-      anguloUsuario = min(anguloUsuario + 2, 180);
+      anguloUsuario = min(180, anguloUsuario + 3);
     } else if (key === " ") {
       verificarAngulo();
     }
@@ -64,7 +70,7 @@ function mostrarJuego() {
   textSize(20);
   text(`Jugador: ${nombreJugador}`, width / 2, 30);
   text(`Nivel: ${nivel} | Puntos: ${puntos}`, width / 2, 60);
-  text(`Gira para formar un ángulo de tipo: ${tipoAngulo}`, width / 2, 100);
+  text(`Haz un ángulo de tipo: ${tipoAngulo}`, width / 2, 100);
 
   // Dibujo del ángulo
   push();
@@ -72,7 +78,7 @@ function mostrarJuego() {
   stroke(0, 255, 0);
   strokeWeight(4);
   line(0, 0, 200, 0); // Línea fija
-  rotate(-anguloUsuario); 
+  rotate(-anguloUsuario);
   stroke(255, 0, 0);
   line(0, 0, 200, 0); // Línea que rota
   pop();
@@ -85,30 +91,23 @@ function mostrarJuego() {
   if (mensaje !== "") {
     textSize(28);
     fill(255, 255, 0);
-    text(mensaje, width / 2, height / 2 - 100);
+    text(mensaje, width / 2, height / 2 - 120);
   }
 }
 
 function verificarAngulo() {
-  if (esperando) return;
-
   if (abs(anguloUsuario - anguloCorrecto) <= margenError) {
-    mensaje = "¡Correcto! 🎉";
+    mensaje = "¡Muy bien! 🎉 Ángulo correcto.";
     puntos += 10;
     nivel++;
-    margenError = max(2, 10 - nivel); // cada nivel es más estricto
+    margenError = max(2, 10 - nivel);
+    mensajeTimer = frameCount;
+    setTimeout(nuevoNivel, 1000);
   } else {
-    mensaje = "Incorrecto 😢";
+    mensaje = "Incorrecto ❌. Intenta otra vez.";
     puntos = max(0, puntos - 5);
+    mensajeTimer = frameCount;
   }
-
-  esperando = true;
-
-  setTimeout(() => {
-    mensaje = "";
-    esperando = false;
-    nuevoNivel();
-  }, 1500);
 }
 
 function nuevoNivel() {
@@ -123,5 +122,3 @@ function nuevoNivel() {
     tipoAngulo = "Obtuso (> 90°)";
   }
 }
-
- 

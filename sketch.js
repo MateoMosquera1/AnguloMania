@@ -3,6 +3,7 @@ let tiempo = 30, tiempoInicio, jugando = false, nombre = "", estado = "menu";
 let jugadores = [];
 let inputNombre, botonInicio, botonReiniciar;
 let figuras = [];
+let tipoAngulo = "";
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -54,6 +55,10 @@ function mostrarMenu() {
   text("🎯 ÁnguloManía 🎮", width / 2, height / 4);
   textSize(20);
   text("Gira los ángulos con ← y →, presiona ESPACIO para confirmar", width / 2, height / 4 + 40);
+  textSize(16);
+  fill(180);
+  text("By: Mateo Cuesta, Hector Andres", width / 2, height - 60);
+  text("Fundación Universitaria María Cano", width / 2, height - 40);
 }
 
 function mostrarJuego() {
@@ -64,6 +69,11 @@ function mostrarJuego() {
   text("⏱️ Tiempo: " + tiempoRestante, 30, 40);
   text("Nivel: " + nivel, 30, 70);
   text("Puntos: " + puntos, 30, 100);
+
+  textAlign(CENTER);
+  textSize(22);
+  fill(255, 200, 0);
+  text("Haz un ángulo de tipo: " + tipoAngulo, width / 2, 80);
 
   push();
   translate(width / 2, height / 2);
@@ -76,7 +86,6 @@ function mostrarJuego() {
   pop();
 
   fill(255);
-  textAlign(CENTER);
   textSize(20);
   text("Gira el ángulo con ← y →", width / 2, height - 120);
   text("Presiona ESPACIO si crees que está bien", width / 2, height - 90);
@@ -88,15 +97,23 @@ function mostrarJuego() {
 
 function keyPressed() {
   if (estado === "jugando") {
-    if (keyCode === LEFT_ARROW) anguloUsuario -= 1;
-    if (keyCode === RIGHT_ARROW) anguloUsuario += 1;
+    if (keyCode === LEFT_ARROW) anguloUsuario -= 5; // 🔥 más rápido
+    if (keyCode === RIGHT_ARROW) anguloUsuario += 5;
     if (key === " ") verificarAngulo();
   }
 }
 
 function nuevoNivel() {
   anguloCorrecto = int(random(20, 160));
+  tipoAngulo = obtenerTipoAngulo(anguloCorrecto);
   anguloUsuario = 0;
+}
+
+function obtenerTipoAngulo(valor) {
+  if (valor < 90) return "Agudo (< 90°)";
+  else if (valor === 90) return "Recto (= 90°)";
+  else if (valor < 180) return "Obtuso (> 90°)";
+  else return "Desconocido";
 }
 
 function verificarAngulo() {
@@ -182,7 +199,7 @@ function cambiarFondo() {
     rotate(f.angle);
     if (f.shape === "circle") ellipse(0, 0, f.size);
     else if (f.shape === "square") rectMode(CENTER), rect(0, 0, f.size, f.size);
-    else triangle(-f.size/2, f.size/2, 0, -f.size/2, f.size/2, f.size/2);
+    else triangle(-f.size / 2, f.size / 2, 0, -f.size / 2, f.size / 2, f.size / 2);
     pop();
     f.y += f.speed;
     if (f.y > height) f.y = 0;

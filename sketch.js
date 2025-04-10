@@ -1,6 +1,6 @@
 let anguloUsuario = 0;
 let anguloObjetivo = 0;
-let estado = "formar"; // puede ser 'formar' o 'clasificar'
+let estado = "formar";
 let respuestaCorrecta = "";
 let mensaje = "";
 let puntos = 0;
@@ -21,7 +21,7 @@ function setup() {
 }
 
 function draw() {
-  background(10, 15, 40); // fondo estilo arcade
+  background(10, 15, 40); 
 
   if (!juegoIniciado) {
     pantallaInicio();
@@ -29,7 +29,7 @@ function draw() {
     mostrarJuego();
   }
 
-  // Mensaje temporal
+  
   if (mensaje && frameCount % 180 === 0) {
     mensaje = "";
   }
@@ -38,7 +38,7 @@ function draw() {
 function pantallaInicio() {
   fill(255);
   textSize(32);
-  text("Bienvenido a ÁnguloManía PRO 🧠", width / 2, height / 3);
+  text("Bienvenido a ÁnguloManía 🧠", width / 2, height / 3);
   textSize(20);
   text("Escribe tu nombre y presiona Enter", width / 2, height / 2);
   textSize(24);
@@ -83,30 +83,30 @@ function mostrarJuego() {
     text(`¿Qué tipo de ángulo es ${anguloObjetivo}°?`, width / 2, 100);
   }
 
-  // Dibujo del ángulo
+
   push();
   translate(width / 2, height / 2 + 60);
   stroke(0, 255, 0);
   strokeWeight(4);
-  line(0, 0, 200, 0); // línea base
+  line(0, 0, 200, 0);
 
   rotate(-anguloUsuario);
   stroke(255, 0, 0);
-  line(0, 0, 200, 0); // línea que gira
+  line(0, 0, 200, 0);
   pop();
 
   textSize(22);
   fill(255);
   text("Ángulo actual: " + Math.round(anguloUsuario) + "°", width / 2, height - 60);
 
-  // Mostrar mensaje
+ 
   if (mensaje) {
     textSize(26);
     fill(255, 255, 0);
     text(mensaje, width / 2, height / 2 - 150);
   }
 
-  // Mostrar botones si está clasificando
+ 
   if (estado === "clasificar") {
     for (let i = 0; i < botones.length; i++) {
       botones[i].show();
